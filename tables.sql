@@ -1,6 +1,6 @@
 /*
 Tables:
-	client
+	customer
     shopper
     store
     shoppingList
@@ -10,11 +10,11 @@ Tables:
 
 USE project;
 
-CREATE TABLE client (
-	ClientID				Integer				NOT NULL AUTO_INCREMENT,
-	ClientFirstName			Char(35)			NOT NULL,
-	ClientLastName			Char(35)			NOT NULL,
-	CONSTRAINT			Client_PK			PRIMARY KEY(ClientID)
+CREATE TABLE customer (
+	CustomerID				Integer				NOT NULL AUTO_INCREMENT,
+	CustomerFirstName			Char(35)			NOT NULL,
+	CustomerLastName			Char(35)			NOT NULL,
+	CONSTRAINT			Client_PK			PRIMARY KEY(CustomerID)
 	);
     
 CREATE TABLE shopper (
@@ -41,4 +41,32 @@ CREATE TABLE inventory (
 							REFERENCES  store (StoreID)
 								ON UPDATE CASCADE,
 	CONSTRAINT			Item_PK			PRIMARY KEY(ItemID)
+	);
+    
+CREATE TABLE shoppinglist (
+	ListItemID			Integer				NOT NULL AUTO_INCREMENT,
+	InventoryItem		Integer				NOT NULL,
+    Customer			Integer				NOT NULL,
+    Quantity  		    Integer 	       	NOT NULL,
+    CONSTRAINT 		    InventoryItem_FK 	FOREIGN KEY (InventoryItem)
+							REFERENCES  inventory (ItemID)
+								ON UPDATE CASCADE,
+	CONSTRAINT 		    Customer_FK 	FOREIGN KEY (Customer)
+							REFERENCES  customer (CustomerID)
+								ON UPDATE CASCADE,
+	CONSTRAINT			ShoppingList_PK			PRIMARY KEY(ListItemID)
+	);
+    
+CREATE TABLE shoppingcart (
+	CartItemID			Integer				NOT NULL AUTO_INCREMENT,
+	InventoryItem		Integer				NOT NULL,
+    Customer			Integer				NOT NULL,
+    Quantity  		    Integer 	       	NOT NULL,
+    CONSTRAINT 		    InventoryItem_FK 	FOREIGN KEY (InventoryItem)
+							REFERENCES  inventory (ItemID)
+								ON UPDATE CASCADE,
+	CONSTRAINT 		    Customer_FK 	FOREIGN KEY (Customer)
+							REFERENCES  customer (CustomerID)
+								ON UPDATE CASCADE,
+	CONSTRAINT			ShoppingList_PK			PRIMARY KEY(ListItemID)
 	);
