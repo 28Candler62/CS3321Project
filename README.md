@@ -8,6 +8,8 @@ It accidentally has two main files.
 main.py is how the user interface runs. 
 
 4/25/2026
+No files are currently connected to John's SQL Database work because Greg does not know how to make it work together.
+
 I have added:
 main.py
 person.py
