@@ -1,6 +1,6 @@
 /*
 Tables:
-	customer
+	patron
     shopper
     store
     shoppingList
@@ -8,11 +8,11 @@ Tables:
     inventory
 */
 
-CREATE TABLE IF NOT EXISTS customer (
-	CustomerID			INTEGER PRIMARY KEY AUTOINCREMENT,
-	CustomerFirstName	Char(35)			NOT NULL,
-	CustomerLastName	Char(35)			NOT NULL,
-    CONSTRAINT 			CustomerName_UC		UNIQUE (CustomerFirstName, CustomerLastName)
+CREATE TABLE IF NOT EXISTS patron (
+	PatronID			INTEGER PRIMARY KEY AUTOINCREMENT,
+	PatronFirstName	Char(35)			NOT NULL,
+	PatronLastName	Char(35)			NOT NULL,
+    CONSTRAINT 			PatronName_UC		UNIQUE (PatronFirstName, PatronLastName)
     );
     
 CREATE TABLE IF NOT EXISTS shopper (
@@ -44,15 +44,15 @@ CREATE TABLE IF NOT EXISTS inventory (
 CREATE TABLE IF NOT EXISTS shoppinglist (
 	ListItemID			INTEGER PRIMARY KEY AUTOINCREMENT,
 	InventoryItem		Integer				NOT NULL,
-    Customer			Integer				NOT NULL,
+    Patron			Integer				NOT NULL,
     Quantity  		    Integer 	       	NOT NULL,
     CONSTRAINT 		    InventoryItem_FK 	FOREIGN KEY (InventoryItem)
 							REFERENCES  inventory (ItemID)
 								ON UPDATE CASCADE,
-	CONSTRAINT 		    Customer_FK 		FOREIGN KEY (Customer)
-							REFERENCES  customer (CustomerID)
+	CONSTRAINT 		    Patron_FK 		FOREIGN KEY (Patron)
+							REFERENCES  Patron (PatronID)
 								ON UPDATE CASCADE,
-	CONSTRAINT 			ShoppingList_UC		UNIQUE (InventoryItem, Customer)
+	CONSTRAINT 			ShoppingList_UC		UNIQUE (InventoryItem, Patron)
 	);
     
 CREATE TABLE IF NOT EXISTS shoppingcart (

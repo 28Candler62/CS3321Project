@@ -1,4 +1,4 @@
-INSERT INTO customer (CustomerFirstName, CustomerLastName)
+INSERT INTO patron (PatronFirstName, PatronLastName)
 	VALUES 
     ('Mary', 'Smith'),
 	('Pete', 'Hansen')/*,
@@ -24,7 +24,7 @@ INSERT INTO inventory (ItemName, ItemDescription, ItemStore, Quantity, Price)
     ('carrot', 'Delicious carrot', 1, 10, 3.99),
 	('screwdriver', 'Philips screwdriver', 2, 1, 7.50);
     
-INSERT INTO shoppinglist (InventoryItem, Customer, Quantity)
+INSERT INTO shoppinglist (InventoryItem, Patron, Quantity)
 	VALUES 
     (1, 1, 1),
 	(2, 1, 1);
@@ -39,7 +39,7 @@ SELECT *
 FROM shoppingcart sc 
 JOIN shoppinglist sl ON sc.ShoppingListItem = sl.ListItemID
 JOIN inventory i ON i.ItemID = sl.InventoryItem
-JOIN customer c ON c.CustomerID = sl.Customer
+JOIN patron p ON p.PatronID = sl.Patron
 JOIN shopper s ON s.ShopperID = sc.Shopper
 JOIN store st ON i.ItemStore = st.StoreID
 WHERE st.StoreName = 'HEB';
@@ -49,7 +49,7 @@ SELECT * FROM shopper;
 SELECT * 
 FROM shoppinglist s 
 JOIN inventory i ON i.ItemID = s.InventoryItem
-JOIN customer c ON c.CustomerID = s.Customer;
+JOIN patron p ON p.PatronID = s.Patron;
 
 SELECT i.ItemID, i.ItemName, i.ItemDescription, s.StoreName, Quantity, Price 
 FROM inventory i JOIN store s ON i.ItemStore = s.StoreID;
