@@ -183,7 +183,7 @@ class Shoppinglist:
         res = self.db.execute(
             """
             SELECT 
-                i.ItemStore,
+                DISTINCT i.ItemStore,
                 st.StoreName
             FROM shoppinglist sl
             JOIN inventory i ON i.ItemID = sl.InventoryItem
@@ -201,7 +201,7 @@ class Shoppinglist:
         res = self.db.execute(
             """
             SELECT 
-                sl.Patron,
+                DISTINCT sl.Patron,
                 p.PatronFirstName,
                 p.PatronLastName
             FROM shoppinglist sl
