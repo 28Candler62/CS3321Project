@@ -149,5 +149,44 @@ class Shoppinglist:
             """,
             (patron_id,)
         )
-
+        
         return res.rowcount
+        
+    def view_list_stores(self):
+        """
+        View stores on the shopping list.
+        """
+
+        res = self.db.execute(
+            """
+            SELECT 
+                i.ItemStore,
+                st.StoreName
+            FROM shoppinglist sl
+            JOIN inventory i ON i.ItemID = sl.InventoryItem
+            JOIN store st ON st.StoreID = i.ItemStore
+            """
+        )
+
+        return res.fetchall()
+        
+    def view_list_patrons(self, store_id:int):
+        """
+        View patrons on the shopping list with items from selected store.
+        """
+    
+        res = self.db.execute(
+            """
+            SELECT 
+                sl.Patron,
+                p.PatronFirstName
+                p.PatronLastName
+            FROM shoppinglist sl
+            JOIN inventory i ON i.ItemID = sl.InventoryItem
+            JOIN patron p ON p.PatronID = sl.Patron
+            WHERE i.ItemStore == ?
+            """,
+            (store_id,)
+        )
+    
+        return res.fetchall()
