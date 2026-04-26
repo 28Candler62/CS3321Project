@@ -57,8 +57,7 @@ def patron_add_list_item():
     [print(f'{x[0]}\t\t{x[1]}') for x in inventory.get_stores()]
     store_id = int(input("Enter Store ID: "))
     
-    print('Item ID \t Name \t Description \tQuantity \t Price')
-    [print(f'{x[0]}\t\t{x[1]}\t{x[2]}\t{x[3]}\t{x[4]}') for x in inventory.get_items(store_id)]
+    view_store_inventory(store_id)
     item_id = int(input("Enter Item ID to add to Shopping list: "))
     qty = int(input("Enter Quantity: "))
     
@@ -99,7 +98,6 @@ def view_shopping_list(patron_id:int, store_id:int=None):
     total = float(s_list.calculate_total(patron_id))
     print(f"{'Shopping List Total:':>61} ${total:.2f}")
     return items
-
     
 def patron_view_shopping_list():
     patron_info = patron.get_id(input("Enter your last name: "))
@@ -120,7 +118,6 @@ def patron_update_info():
     lname = input("Enter your lastname: ")
     patron.addinfo(fname, lname)
     
-
 def patron_menu():
     exit = 0
     while (exit != 5):
@@ -245,11 +242,40 @@ def store_add_inventory_item():
     
     inventory.add_item(item_name, item_desc, store_id, qty, price)
     
+def view_store_inventory(store_id:int=None):
+    items = inventory.get_store_inventory(store_id)
+
+    if len(items) == 0:
+        print("\nNo Items in Store Inventory.")
+        input("Press Enter to Continue")
+        return
+
+    print("\nStore Inventory")
+    print("-" * 90)
+    print(f"{'Item ID':<10} {'Name':<20} {'Description':<20} {'Qty':<5} {'Price':<10}") #ItemID, ItemName, ItemDescription, Quantity, Price
+    print("-" * 90)
+
+    for item in items:
+        inventory_id = item[0]
+        item_name = item[1]
+        description = item[2]
+        quantity = item[3]
+        price = float(item[4])
+
+        print(
+            f"{inventory_id:<10} "
+            f"{item_name:<20} "
+            f"{description:<20} "
+            f"{quantity:<5} "
+            f"${price:<10.2f} "
+        )
+
+    print("-" * 90)
+    
 def store_view_inventory():
     store_id = int(store.get_id(input("Enter store name: "))[0])
     
-    print('Item ID \t Name \t Description \tQuantity \t Price')
-    [print(f'{x[0]}\t\t{x[1]}\t{x[2]}\t{x[3]}\t{x[4]}') for x in inventory.get_items(store_id)]
+    view_store_inventory(store_id)
     input("Press Enter to Continue")
     
 def store_menu():
