@@ -3,7 +3,7 @@ class Shopper:
         self.db = db
         
     def addinfo(self, fname, lname):
-        self.db.executemany("INSERT INTO shopper(ShopperFirstName, ShopperLastName) VALUES(?, ?)", [(fname, lname)])
+        self.db.execute("INSERT INTO shopper(ShopperFirstName, ShopperLastName) VALUES(?, ?)", ((fname, lname),))
         
     def get_id(self, lname):
         res = self.db.execute(

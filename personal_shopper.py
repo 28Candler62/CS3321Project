@@ -15,47 +15,31 @@ s_list = Shoppinglist(db)
 inventory = Inventory(db)
 cart = Cart(db)
 
-_main_menu = """
-Welcome to Personal Shopper
-
-1: Patron
-2: Shopper
-3: Store
-4: Exit
-"""
-_patron_menu = """
-Patron Menu
-
-1: Update Info
-2: Add to Shopping List
-3: View Shopping List
-4: Remove Item From Shopping List
-5: Receive Items
-6: Exit
-"""
-
-_shopper_menu = """
-Shopper Menu
-
-1: Update Info
-2: Shop
-3: View Cart
-4: Exit
-"""
-
-_store_menu = """
-Store Menu
-
-1: Update Info
-2: Update Inventory
-3: View Inventory
-4: Exit
-"""
 def patron_add_list_item():
     patron_id = int(patron.get_id(input("Enter your last name: "))[0])
+    stores = inventory.get_stores()
     
-    print('Store ID \t Store Name')
-    [print(f'{x[0]}\t\t{x[1]}') for x in inventory.get_stores()]
+    if len(stores) == 0:
+        print("\nNo Stores Found.")
+        input("Press Enter to Continue")
+        return
+    
+    print(
+        "\nStore List\n"
+        f"{"-" * 90}\n"
+        f"{'Store ID':<10} {'Store Name':<20}\n"
+        f"{"-" * 90}"
+    )
+    
+    for store in stores:    
+        inv_store_id = store[0]
+        inv_store_name = store[1]
+        
+        print(
+            f"{inv_store_id:<10} "
+            f"{inv_store_name:<20} "
+        )
+        
     store_id = int(input("Enter Store ID: "))
     
     view_store_inventory(store_id)
@@ -264,7 +248,16 @@ def patron_menu():
     exit = 0
     while (exit != 6):
         os.system('cls')
-        print(_patron_menu)
+        print(
+            f'\nPatron Menu\n'
+            f'{"-" * 90}\n'
+            f'1: Update Info\n'
+            f'2: Add to Shopping List\n'
+            f'3: View Shopping List\n'
+            f'4: Receive Items\n'
+            f'5: Exit\n'
+            f'{"-" * 90}\n'
+        )
         menu = int(input('Please Select to Procede: '))
     
         match menu:
@@ -364,7 +357,15 @@ def shopper_menu():
     exit = 0
     while (exit != 4):
         os.system('cls')
-        print(_shopper_menu)
+        print(
+            f'\nShopper Menu\n'
+            f'{"-" * 90}\n'
+            f'1: Update Info\n'
+            f'2: Shop\n'
+            f'3: View Cart\n'
+            f'4: Exit\n'
+            f'{"-" * 90}\n'
+        )
         menu = int(input('Please Select to Procede: '))
     
         match menu:
@@ -426,7 +427,15 @@ def store_menu():
     exit = 0
     while (exit != 4):
         os.system('cls')
-        print(_store_menu)
+        print(
+            f'\nStore Menu\n'
+            f'{"-" * 90}\n'
+            f'1: Update Info\n'
+            f'2: Update Inventory\n'
+            f'3: View Inventory\n'
+            f'4: Exit\n'
+            f'{"-" * 90}\n'
+        )
         menu = int(input('Please Select to Procede: '))
     
         match menu:
@@ -443,7 +452,15 @@ def main_menu():
     exit = 0
     while (exit != 4):
         os.system('cls')
-        print(_main_menu)
+        print(
+            f'\nWelcome to Personal Shopper\n'
+            f'{"-" * 90}\n'
+            f'1: Patron\n'
+            f'2: Shopper\n'
+            f'3: Store\n'
+            f'4: Exit\n'
+            f'{"-" * 90}\n'
+        )
         menu = int(input('Please Select to Procede: '))
         exit_while = menu
         
