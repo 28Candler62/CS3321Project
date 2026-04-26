@@ -63,16 +63,8 @@ def patron_add_list_item():
     
     s_list.add_item(item_id, patron_id, qty)
     
-def patron_view_shopping_list():
-    patron_info = patron.get_id(input("Enter your last name: "))
-
-    if patron_info is None:
-        print("\nPatron not found.")
-        input("Press Enter to Continue")
-        return
-
-    patron_id = int(patron_info[0])
-    items = s_list.view_list(patron_id)
+def view_shopping_list(patron_id:int, store_id:int=None):
+    items = s_list.view_list(patron_id, store_id)
 
     if len(items) == 0:
         print("\nYour shopping list is empty.")
@@ -105,6 +97,19 @@ def patron_view_shopping_list():
 
     total = float(s_list.calculate_total(patron_id))
     print(f"{'Shopping List Total:':>61} ${total:.2f}")
+
+    
+def patron_view_shopping_list():
+    patron_info = patron.get_id(input("Enter your last name: "))
+
+    if patron_info is None:
+        print("\nPatron not found.")
+        input("Press Enter to Continue")
+        return
+
+    patron_id = int(patron_info[0])
+    
+    view_shopping_list(patron_id)
 
     input("\nPress Enter to Continue")
     
@@ -151,7 +156,25 @@ def shopper_shop():
         )
     print("-" * 90)
     store_id = int(input("Enter Store ID to shop: "))
-    print(s_list.view_list_patrons(store_id))
+    
+    patrons = s_list.view_list_patrons(store_id)
+    print("\nAvailable Patrons")
+    print("-" * 90)
+    print(f"{'Patron ID':<10} {'First Name':<20} {'Last Name':<20}")
+    print("-" * 90)
+    for patron in patrons:
+        sl_patron_id = patron[0]
+        sl_patron_fname = patron[1]
+        sl_patron_lname = patron[2]
+        print(
+            f"{sl_patron_id:<10} "
+            f"{sl_patron_fname:<20} "
+            f"{sl_patron_lname:<20} "
+        )
+    print("-" * 90)
+    patron_id = int(input("Enter Patron ID to shop for: "))
+    
+    view_shopping_list(patron_id, store_id)
     input("Press Enter to Continue")
     
     
