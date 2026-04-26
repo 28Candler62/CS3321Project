@@ -13,7 +13,37 @@ class Cart:
             (sl_item_id,)        
         )
         
-        inventory_id, qty = res.fetchone()
+        decrement_params = res.fetchone()
+        if decrement_params:
+            inventory_id = decrement_params[0]
+            qty = decrement_params[1]
+        else:
+            raise ValueError
+        
+        res = self.db.execute(
+            """
+            SELECT *
+            FROM inventory
+            WHERE ItemID == ?
+            """,
+            (inventory_id,)
+        )
+        current_inventory = res.fetchone()
+        
+        if current_inventory:
+            currenty_qty = current_inventory[4]
+        else:
+            raise ValueError        
+        
+            
+        res = self.db.execute(
+            """
+            UPDATE inventory
+            SET Quantity = ?
+            WHERE ItemID == ?
+            """,
+            (currenty_qty - qty, inventory_id)
+        )
     
     def add_item(self, sl_item_id:int, shopper_id:int):
         
@@ -37,6 +67,8 @@ class Cart:
                 """,
                 (sl_item_id, shopper_id)
             )
+        
+        self.__decrement_store_inventory(sl_item_id)
         
         return True
         

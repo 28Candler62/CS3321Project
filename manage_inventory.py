@@ -15,7 +15,7 @@ class Inventory:
         )
         return res.fetchall()
         
-    def get_store_inventory(self, store_id):
+    def get_store_inventory(self, store_id:int):
         res = self.db.execute(
         """
         SELECT ItemID, ItemName, ItemDescription, Quantity, Price
@@ -25,17 +25,6 @@ class Inventory:
         (store_id,)
         )
         return res.fetchall()
-    
-    def get_inventory_item(self, store_id):
-        res = self.db.execute(
-        """
-        SELECT ItemID, ItemName, ItemDescription, Quantity, Price
-        FROM inventory
-        WHERE ItemStore == ?
-        """,
-        (store_id,)
-        )
-        return res.fetchone()
         
     def add_item(self, name:str, desc:str, store:int, qty:int, price:float):
         self.db.execute("INSERT INTO inventory(ItemName, ItemDescription, ItemStore, Quantity, Price) VALUES(?, ?, ?, ?, ?)", (name, desc, store, qty, price))
