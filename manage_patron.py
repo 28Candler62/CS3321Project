@@ -16,9 +16,4 @@ class Patron:
         )
         return res.fetchone()
         
-    def shop(self):
-        res= self.db.execute('SELECT StoreID, StoreName FROM store')
-        print('Store ID \t Store Name')
-        [print(f'{x[0]}\t\t{x[1]}') for x in res.fetchall()]
-        store = int(input('Select Store ID: '))
         

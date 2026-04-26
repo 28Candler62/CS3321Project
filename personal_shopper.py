@@ -96,7 +96,8 @@ def patron_menu():
                 exit = 5
 
 def shopper_shop():
-    store_id = 
+    store_id = 0
+    
 def shopper_menu():
     exit = 0
     while (exit != 3):
