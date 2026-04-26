@@ -174,6 +174,87 @@ def patron_remove_list_item():
 
     input("Press Enter to Continue")
 
+def patron_receive_items():
+    patron_info = patron.get_id(input("Enter your last name: "))
+
+    if patron_info is None:
+        print("\nPatron not found.")
+        input("Press Enter to Continue")
+        return
+
+    patron_id = int(patron_info[0])
+    received_items = s_list.view_received_items(patron_id)
+
+    if len(received_items) == 0:
+        print("\nNo checked-out items are ready to receive.")
+        input("Press Enter to Continue")
+        return
+
+    print("\nItems Ready to Receive")
+    print("-" * 120)
+    print(f"{'Cart ID':<8} {'List ID':<8} {'Item':<20} {'Store':<15} {'Qty':<5} {'Price':<10} {'Line Total':<12} {'Shopper':<20}")
+    print("-" * 120)
+
+    valid_list_ids = []
+
+    for item in received_items:
+        cart_item_id = item[0]
+        list_item_id = item[1]
+        item_name = item[2]
+        store_name = item[4]
+        quantity = item[5]
+        price = float(item[6])
+        line_total = float(item[7])
+        shopper_name = item[8] + " " + item[9]
+
+        valid_list_ids.append(list_item_id)
+
+        print(
+            f"{cart_item_id:<8} "
+            f"{list_item_id:<8} "
+            f"{item_name:<20} "
+            f"{store_name:<15} "
+            f"{quantity:<5} "
+            f"${price:<9.2f} "
+            f"${line_total:<11.2f} "
+            f"{shopper_name:<20}"
+        )
+
+    print("-" * 120)
+
+    print("\n1: Receive one item")
+    print("2: Receive all items")
+    print("3: Cancel")
+
+    choice = int(input("Please Select to Proceed: "))
+
+    if choice == 1:
+        list_item_id = int(input("Enter the List ID of the item received: "))
+
+        if list_item_id not in valid_list_ids:
+            print("\nThat List ID is not ready to receive.")
+            input("Press Enter to Continue")
+            return
+
+        rows_removed = s_list.receive_item(patron_id, list_item_id)
+
+        if rows_removed > 0:
+            print("\nItem received and removed from shopping list.")
+        else:
+            print("\nItem could not be received.")
+
+    elif choice == 2:
+        rows_removed = s_list.receive_all_items(patron_id)
+        print(f"\n{rows_removed} item(s) received and removed from shopping list.")
+
+    elif choice == 3:
+        print("\nReceive items cancelled.")
+
+    else:
+        print("\nInvalid option.")
+
+    input("Press Enter to Continue")
+
 def patron_update_info():
     fname = input("Enter your first name: ")
     lname = input("Enter your lastname: ")
@@ -196,8 +277,7 @@ def patron_menu():
             case 4:
                 patron_remove_list_item()
             case 5:
-                print("Receive Items is not ready yet.")
-                input("Press Enter to Continue")
+                patron_receive_items()
             case 6:
                 exit = 6
 

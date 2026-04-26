@@ -213,3 +213,79 @@ class Shoppinglist:
         )
     
         return res.fetchall()
+    def view_received_items(self, patron_id:int):
+        """
+        View shopping list items that have been checked out by a shopper
+        and are ready for the patron to receive.
+        """
+        patron_id = int(patron_id)
+
+        res = self.db.execute(
+            """
+            SELECT
+                sc.CartItemID,
+                sl.ListItemID,
+                i.ItemName,
+                i.ItemDescription,
+                st.StoreName,
+                sl.Quantity,
+                i.Price,
+                ROUND(sl.Quantity * i.Price, 2) AS LineTotal,
+                sh.ShopperFirstName,
+                sh.ShopperLastName
+            FROM shoppingcart sc
+            JOIN shoppinglist sl ON sc.ShoppingListItem = sl.ListItemID
+            JOIN inventory i ON i.ItemID = sl.InventoryItem
+            JOIN store st ON st.StoreID = i.ItemStore
+            JOIN shopper sh ON sh.ShopperID = sc.Shopper
+            WHERE sl.Patron == ?
+            ORDER BY st.StoreName, i.ItemName
+            """,
+            (patron_id,)
+        )
+
+        return res.fetchall()
+
+    def receive_item(self, patron_id:int, list_item_id:int):
+        """
+        Remove a received item from the patron's shopping list.
+        Also removes the matching shopping cart row first.
+        """
+        patron_id = int(patron_id)
+        list_item_id = int(list_item_id)
+
+        # Remove from cart first because cart points to shoppinglist.
+        self.db.execute(
+            """
+            DELETE FROM shoppingcart
+            WHERE ShoppingListItem == ?
+            """,
+            (list_item_id,)
+        )
+
+        res = self.db.execute(
+            """
+            DELETE FROM shoppinglist
+            WHERE ListItemID == ?
+            AND Patron == ?
+            """,
+            (list_item_id, patron_id)
+        )
+
+        return res.rowcount
+
+    def receive_all_items(self, patron_id:int):
+        """
+        Receive all checked-out items for a patron.
+        Only removes items that are currently in the shopping cart.
+        """
+        patron_id = int(patron_id)
+        received_items = self.view_received_items(patron_id)
+
+        rows_removed = 0
+
+        for item in received_items:
+            list_item_id = item[1]
+            rows_removed += self.receive_item(patron_id, list_item_id)
+
+        return rows_removed
