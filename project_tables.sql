@@ -44,7 +44,7 @@ CREATE TABLE IF NOT EXISTS inventory (
 CREATE TABLE IF NOT EXISTS shoppinglist (
 	ListItemID			INTEGER PRIMARY KEY AUTOINCREMENT,
 	InventoryItem		Integer				NOT NULL,
-    Patron			Integer				NOT NULL,
+    Patron				Integer				NOT NULL,
     Quantity  		    Integer 	       	NOT NULL,
     CONSTRAINT 		    InventoryItem_FK 	FOREIGN KEY (InventoryItem)
 							REFERENCES  inventory (ItemID)

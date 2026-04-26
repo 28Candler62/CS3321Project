@@ -134,7 +134,27 @@ def patron_menu():
                 exit = 5
 
 def shopper_shop():
-    store_id = 0
+     #shopper_id = int(patron.get_id(input("Enter your last name: "))[0])
+    
+    stores = s_list.view_list_stores()
+    print("\nAvailable Stores")
+    print("-" * 90)
+    print(f"{'Store ID':<10} {'Store':<20}")
+    print("-" * 90)
+    
+    for store in stores:
+        sl_store_id = store[0]
+        sl_store_name = store[1]
+        print(
+            f"{sl_store_id:<10} "
+            f"{sl_store_name:<20} "
+        )
+    print("-" * 90)
+    store_id = int(input("Enter Store ID to shop: "))
+    print(s_list.view_list_patrons(store_id))
+    input("Press Enter to Continue")
+    
+    
     
 def shopper_menu():
     exit = 0
@@ -147,7 +167,7 @@ def shopper_menu():
             case 1:
                 exit=3
             case 2:
-                exit=3
+                shopper_shop()
             case 3:
                 exit = 3
                 
