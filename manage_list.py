@@ -51,13 +51,14 @@ class Shoppinglist:
 
         return True
 
-    def view_list(self, patron_id):
+    def view_list(self, patron_id:int, store_id:int=None):
         """
         View a patron's shopping list with item, store, quantity, price, and total information.
         """
         patron_id = int(patron_id)
-
-        res = self.db.execute(
+        
+        if store_id:
+            res = self.db.execute(
             """
             SELECT 
                 sl.ListItemID,
@@ -72,10 +73,32 @@ class Shoppinglist:
             JOIN inventory i ON i.ItemID = sl.InventoryItem
             JOIN store st ON st.StoreID = i.ItemStore
             WHERE sl.Patron == ?
+            AND st.StoreID == ?
             ORDER BY st.StoreName, i.ItemName
             """,
-            (patron_id,)
-        )
+            (patron_id, store_id)
+            )
+        
+        else:
+            res = self.db.execute(
+                """
+                SELECT 
+                    sl.ListItemID,
+                    i.ItemID,
+                    i.ItemName,
+                    i.ItemDescription,
+                    st.StoreName,
+                    sl.Quantity,
+                    i.Price,
+                    ROUND(sl.Quantity * i.Price, 2) AS LineTotal
+                FROM shoppinglist sl
+                JOIN inventory i ON i.ItemID = sl.InventoryItem
+                JOIN store st ON st.StoreID = i.ItemStore
+                WHERE sl.Patron == ?
+                ORDER BY st.StoreName, i.ItemName
+                """,
+                (patron_id,)
+            )
 
         return res.fetchall()
 
@@ -179,7 +202,7 @@ class Shoppinglist:
             """
             SELECT 
                 sl.Patron,
-                p.PatronFirstName
+                p.PatronFirstName,
                 p.PatronLastName
             FROM shoppinglist sl
             JOIN inventory i ON i.ItemID = sl.InventoryItem
