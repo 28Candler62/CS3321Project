@@ -4,12 +4,12 @@ class Store:
         
     def get_id(self, name):
         res = self.db.execute(
-        """
-        SELECT StoreID
-        FROM store
-        WHERE StoreName == ?
-        """,
-        (name,)
+            """
+            SELECT StoreID
+            FROM store
+            WHERE StoreName == ?
+            """,
+            (name,)
         )
         return res.fetchone()
         
