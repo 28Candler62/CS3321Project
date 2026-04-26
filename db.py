@@ -45,11 +45,14 @@ class AppDataBase:
             print(f"Script file not found: {script_file}")
             raise
 
-    def execute(self, statement_param):
+    def execute(self, statement_param, iterable_param = None):
         """
         Executes a single SQL statement. Use placeholders (? or :name) to safely bind parameters and prevent SQL injection
         """
-        return self.__db_connection.execute(statement_param)
+        if iterable_param:
+            return self.__db_connection.execute(statement_param, iterable_param)
+        else:
+            return self.__db_connection.execute(statement_param)
 
     def executemany(self, statement_param, iterable_param):
         """
@@ -76,6 +79,16 @@ EXAMPLE
 db = AppDataBase()
 
 db.execute("CREATE TABLE lang(name, first_appeared)")
+
+res = db.execute(
+    '''
+    SELECT StoreID
+    FROM store
+    WHERE StoreName == ?
+    ''',
+    ('HEB',)
+    )
+print(res.fetchall())
 
 data = [
     ("C++", 1985),

@@ -113,6 +113,7 @@ def main_menu():
                 exit = 4
 
 if __name__ == "__main__":
+
     main_menu()
 
     print('Good Bye')
