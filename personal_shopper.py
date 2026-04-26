@@ -1,14 +1,19 @@
 from db import AppDataBase
-#from manage_patron import Patron
-#from manage_shopper import Shopper
-#from manage_store import Store
-#from manage_list import Shoppinglist
-#from manage_cart import Cart
-#from manage_inventory import Inventory
+from manage_patron import Patron
+from manage_shopper import Shopper
+from manage_store import Store
+from manage_list import Shoppinglist
+from manage_cart import Cart
+from manage_inventory import Inventory
 import os
 
 db = AppDataBase()
-#p1 = People(db)
+patron = Patron(db)
+shopper = Shopper(db)
+store = Store(db)
+s_list = Shoppinglist(db)
+inventory = Inventory(db)
+cart = Cart(db)
 
 _main_menu = """
 Welcome to Personal Shopper
@@ -23,8 +28,9 @@ Patron Menu
 
 1: Update Info
 2: Add to Shopping List
-3: Receive Items
-4: Exit
+3: View Shopping List
+4: Receive Items
+5: Exit
 """
 
 _shopper_menu = """
@@ -40,30 +46,58 @@ Store Menu
 
 1: Update Info
 2: Update Inventory
-3: Exit
+3: View Inventory
+4: Exit
 """
-
+def patron_add_list_item():
+    patron_id = int(patron.get_id(input("Enter your last name: "))[0])
+    
+    print('Store ID \t Store Name')
+    [print(f'{x[0]}\t\t{x[1]}') for x in inventory.get_stores()]
+    store_id = int(input("Enter Store ID: "))
+    
+    print('Item ID \t Name \t Description \tQuantity \t Price')
+    [print(f'{x[0]}\t\t{x[1]}\t{x[2]}\t{x[3]}\t{x[4]}') for x in inventory.get_items(store_id)]
+    item_id = int(input("Enter Item ID to add to Shopping list: "))
+    qty = int(input("Enter Quantity: "))
+    
+    s_list.add_item(item_id, patron_id, qty)
+    
+def patron_view_shopping_list():
+    patron_id = int(patron.get_id(input("Enter your last name: "))[0])
+    #print(patron_id)
+    print(s_list.view_list(patron_id))
+    
+    input("Press Enter to Continue")
+    
 def patron_update_info():
     fname = input("Enter your first name: ")
     lname = input("Enter your lastname: ")
+    patron.addinfo(fname, lname)
+    
 
 def patron_menu():
     exit = 0
-    while (exit != 4):
+    while (exit != 5):
         os.system('cls')
         print(_patron_menu)
         menu = int(input('Please Select to Procede: '))
     
         match menu:
             case 1:
-                exit = 4
+                patron_update_info()
             case 2:
-                exit = 4
+                patron_add_list_item()
             case 3:
-                exit = 4
+                patron_view_shopping_list()
             case 4:
-                exit = 4
+                exit = 5
+            case 5:
+                exit = 5
 
+def shopper_shop():
+    store_id = 0
+    
 def shopper_menu():
     exit = 0
     while (exit != 3):
@@ -79,20 +113,38 @@ def shopper_menu():
             case 3:
                 exit = 3
                 
+def store_add_inventory_item():
+    store_id = int(store.get_id(input("Enter store name: "))[0])
+    item_name = input("Enter item name: ")
+    item_desc = input("Enter item description: ")
+    qty = int(input("Enter Quantity: "))
+    price = float(input("Enter Price: $"))
+    
+    inventory.add_item(item_name, item_desc, store_id, qty, price)
+    
+def store_view_inventory():
+    store_id = int(store.get_id(input("Enter store name: "))[0])
+    
+    print('Item ID \t Name \t Description \tQuantity \t Price')
+    [print(f'{x[0]}\t\t{x[1]}\t{x[2]}\t{x[3]}\t{x[4]}') for x in inventory.get_items(store_id)]
+    input("Press Enter to Continue")
+    
 def store_menu():
     exit = 0
-    while (exit != 3):
+    while (exit != 4):
         os.system('cls')
         print(_store_menu)
         menu = int(input('Please Select to Procede: '))
     
         match menu:
             case 1:
-                exit=3
+                exit=4
             case 2:
-                exit=3
+                store_add_inventory_item()
             case 3:
-                exit = 3     
+                store_view_inventory()
+            case 4:
+                exit = 4   
 
 def main_menu():
     exit = 0

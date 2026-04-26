@@ -15,7 +15,6 @@ class Shoppinglist:
             print("Quantity must be greater than 0.")
             return False
 
-        # Check if item is already in this patron's shopping list
         res = self.db.execute(
             """
             SELECT ListItemID, Quantity
@@ -54,7 +53,7 @@ class Shoppinglist:
 
     def view_list(self, patron_id):
         """
-        View a patron's shopping list with readable item/store/price information.
+        View a patron's shopping list with item, store, quantity, price, and total information.
         """
         patron_id = int(patron_id)
 
