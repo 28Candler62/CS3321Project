@@ -1,6 +1,19 @@
 class Cart:
     def __init__(self, db):
         self.db = db
+        
+    def __decrement_store_inventory(self, sl_item_id:int):
+        
+        res = self.db.execute(
+            """
+            SELECT InventoryItem, Quantity
+            FROM shoppinglist
+            WHERE ListItemID == ?
+            """,
+            (sl_item_id,)        
+        )
+        
+        inventory_id, qty = res.fetchone()
     
     def add_item(self, sl_item_id:int, shopper_id:int):
         
@@ -16,9 +29,7 @@ class Cart:
         
         existing_item = res.fetchone()
         
-        if existing_item:
-            return
-        else:        
+        if not existing_item:        
             self.db.execute(
                 """
                 INSERT INTO shoppingcart(ShoppingListItem, Shopper)
