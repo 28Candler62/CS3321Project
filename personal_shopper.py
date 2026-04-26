@@ -38,7 +38,8 @@ Shopper Menu
 
 1: Update Info
 2: Shop
-3: Exit
+3: View Cart
+4: Exit
 """
 
 _store_menu = """
@@ -97,6 +98,7 @@ def view_shopping_list(patron_id:int, store_id:int=None):
 
     total = float(s_list.calculate_total(patron_id))
     print(f"{'Shopping List Total:':>61} ${total:.2f}")
+    return items
 
     
 def patron_view_shopping_list():
@@ -139,14 +141,19 @@ def patron_menu():
                 exit = 5
 
 def shopper_shop():
-     #shopper_id = int(patron.get_id(input("Enter your last name: "))[0])
+    shopper_id = int(shopper.get_id(input("Enter your last name: "))[0])
     
+    if shopper_id is None:
+        print("\nShopper not found.")
+        input("Press Enter to Continue")
+        return
+        
     stores = s_list.view_list_stores()
     print("\nAvailable Stores")
     print("-" * 90)
     print(f"{'Store ID':<10} {'Store':<20}")
     print("-" * 90)
-    
+     
     for store in stores:
         sl_store_id = store[0]
         sl_store_name = store[1]
@@ -174,25 +181,60 @@ def shopper_shop():
     print("-" * 90)
     patron_id = int(input("Enter Patron ID to shop for: "))
     
-    view_shopping_list(patron_id, store_id)
+    sl_items = view_shopping_list(patron_id, store_id)
+    input("Press Enter to ADD ITEMS TO CART AND CHECKOUT")
+    
+    for item in sl_items:
+        sl_item_id = item[0]
+        
+        cart.add_item(sl_item_id, shopper_id)
+        
+    print('Items added to Cart and Checkout complete')
     input("Press Enter to Continue")
     
+def shopper_view_cart():
+    shopper_id = int(shopper.get_id(input("Enter your last name: "))[0])
     
+    if shopper_id is None:
+        print("\nShopper not found.")
+        input("Press Enter to Continue")
+        return
+    
+    cart_items = cart.view_cart(shopper_id)
+    print("\nShopping Cart")
+    print("-" * 90)
+    print(f"{'Cart Item ID':<14} {'List Item ID':<14} {'Patron First Name':<20} {'Patron Last Name':<20}")
+    print("-" * 90)
+    for item in cart_items:
+        sc_item_id = item[0]
+        sl_item_id = item[1]
+        patron_fname = item[2]
+        patron_lname = item[3]
+        print(
+            f"{sc_item_id:<14} "
+            f"{sc_item_id:<14} "
+            f"{patron_fname:<20} "
+            f"{patron_lname:<20} "
+        )
+    print("-" * 90)
+    input("Press Enter to Continue")
     
 def shopper_menu():
     exit = 0
-    while (exit != 3):
+    while (exit != 4):
         os.system('cls')
         print(_shopper_menu)
         menu = int(input('Please Select to Procede: '))
     
         match menu:
             case 1:
-                exit=3
+                exit=4
             case 2:
                 shopper_shop()
             case 3:
-                exit = 3
+                shopper_view_cart()
+            case 4:
+                exit = 4
                 
 def store_add_inventory_item():
     store_id = int(store.get_id(input("Enter store name: "))[0])
