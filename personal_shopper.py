@@ -29,8 +29,9 @@ Patron Menu
 1: Update Info
 2: Add to Shopping List
 3: View Shopping List
-4: Receive Items
-5: Exit
+4: Remove Item From Shopping List
+5: Receive Items
+6: Exit
 """
 
 _shopper_menu = """
@@ -107,7 +108,67 @@ def patron_view_shopping_list():
     print(f"{'Shopping List Total:':>61} ${total:.2f}")
 
     input("\nPress Enter to Continue")
-    
+
+def patron_remove_list_item():
+    patron_info = patron.get_id(input("Enter your last name: "))
+
+    if patron_info is None:
+        print("\nPatron not found.")
+        input("Press Enter to Continue")
+        return
+
+    patron_id = int(patron_info[0])
+    items = s_list.view_list(patron_id)
+
+    if len(items) == 0:
+        print("\nYour shopping list is empty.")
+        input("Press Enter to Continue")
+        return
+
+    print("\nShopping List")
+    print("-" * 90)
+    print(f"{'List ID':<8} {'Item':<20} {'Store':<15} {'Qty':<5} {'Price':<10} {'Line Total':<10}")
+    print("-" * 90)
+
+    valid_list_ids = []
+
+    for item in items:
+        list_item_id = item[0]
+        item_name = item[2]
+        store_name = item[4]
+        quantity = item[5]
+        price = float(item[6])
+        line_total = float(item[7])
+
+        valid_list_ids.append(list_item_id)
+
+        print(
+            f"{list_item_id:<8} "
+            f"{item_name:<20} "
+            f"{store_name:<15} "
+            f"{quantity:<5} "
+            f"${price:<9.2f} "
+            f"${line_total:<9.2f}"
+        )
+
+    print("-" * 90)
+
+    list_item_id = int(input("Enter the List ID of the item you want to remove: "))
+
+    if list_item_id not in valid_list_ids:
+        print("\nThat List ID is not in your shopping list.")
+        input("Press Enter to Continue")
+        return
+
+    rows_removed = s_list.remove_item(list_item_id)
+
+    if rows_removed > 0:
+        print("\nItem removed from shopping list.")
+    else:
+        print("\nItem could not be removed.")
+
+    input("Press Enter to Continue")
+
 def patron_update_info():
     fname = input("Enter your first name: ")
     lname = input("Enter your lastname: ")
@@ -116,7 +177,7 @@ def patron_update_info():
 
 def patron_menu():
     exit = 0
-    while (exit != 5):
+    while (exit != 6):
         os.system('cls')
         print(_patron_menu)
         menu = int(input('Please Select to Procede: '))
@@ -129,9 +190,12 @@ def patron_menu():
             case 3:
                 patron_view_shopping_list()
             case 4:
-                exit = 5
+                patron_remove_list_item()
             case 5:
-                exit = 5
+                print("Receive Items is not ready yet.")
+                input("Press Enter to Continue")
+            case 6:
+                exit = 6
 
 def shopper_shop():
     store_id = 0
