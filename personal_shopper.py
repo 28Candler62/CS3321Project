@@ -64,11 +64,49 @@ def patron_add_list_item():
     s_list.add_item(item_id, patron_id, qty)
     
 def patron_view_shopping_list():
-    patron_id = int(patron.get_id(input("Enter your last name: "))[0])
-    #print(patron_id)
-    print(s_list.view_list(patron_id))
-    
-    input("Press Enter to Continue")
+    patron_info = patron.get_id(input("Enter your last name: "))
+
+    if patron_info is None:
+        print("\nPatron not found.")
+        input("Press Enter to Continue")
+        return
+
+    patron_id = int(patron_info[0])
+    items = s_list.view_list(patron_id)
+
+    if len(items) == 0:
+        print("\nYour shopping list is empty.")
+        input("Press Enter to Continue")
+        return
+
+    print("\nShopping List")
+    print("-" * 90)
+    print(f"{'List ID':<8} {'Item':<20} {'Store':<15} {'Qty':<5} {'Price':<10} {'Line Total':<10}")
+    print("-" * 90)
+
+    for item in items:
+        list_item_id = item[0]
+        item_name = item[2]
+        store_name = item[4]
+        quantity = item[5]
+        price = float(item[6])
+        line_total = float(item[7])
+
+        print(
+            f"{list_item_id:<8} "
+            f"{item_name:<20} "
+            f"{store_name:<15} "
+            f"{quantity:<5} "
+            f"${price:<9.2f} "
+            f"${line_total:<9.2f}"
+        )
+
+    print("-" * 90)
+
+    total = float(s_list.calculate_total(patron_id))
+    print(f"{'Shopping List Total:':>61} ${total:.2f}")
+
+    input("\nPress Enter to Continue")
     
 def patron_update_info():
     fname = input("Enter your first name: ")
