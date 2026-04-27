@@ -346,7 +346,7 @@ def shopper_view_cart():
         patron_lname = item[3]
         print(
             f"{sc_item_id:<14} "
-            f"{sc_item_id:<14} "
+            f"{sl_item_id:<14} "
             f"{patron_fname:<20} "
             f"{patron_lname:<20} "
         )
@@ -397,7 +397,7 @@ def view_store_inventory(store_id:int=None):
 
     print("\nStore Inventory")
     print("-" * 90)
-    print(f"{'Item ID':<10} {'Name':<20} {'Description':<20} {'Qty':<5} {'Price':<10}") #ItemID, ItemName, ItemDescription, Quantity, Price
+    print(f"{'Item ID':<10} {'Name':<20} {'Description':<20} {'Qty':<5} {'Price':<10}")
     print("-" * 90)
 
     for item in items:
