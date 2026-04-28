@@ -254,8 +254,9 @@ def patron_menu():
             f'1: Update Info\n'
             f'2: Add to Shopping List\n'
             f'3: View Shopping List\n'
-            f'4: Receive Items\n'
-            f'5: Exit\n'
+            f'4: Remove Item from Shopping List.\n'
+            f'5: Receive Items\n'
+            f'6: Exit\n'
             f'{"-" * 90}\n'
         )
         menu = int(input('Please Select to Procede: '))
