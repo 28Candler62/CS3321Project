@@ -26,12 +26,12 @@ def patron_add_list_item():
     
     print(
         "\nStore List\n"
-        f"{"-" * 90}\n"
+        f'{"-" * 90}\n'
         f"{'Store ID':<10} {'Store Name':<20}\n"
-        f"{"-" * 90}"
+        f'{"-" * 90}'
     )
     
-    for store in stores:    
+    for store in stores:
         inv_store_id = store[0]
         inv_store_name = store[1]
         
@@ -243,10 +243,11 @@ def patron_update_info():
     fname = input("Enter your first name: ")
     lname = input("Enter your lastname: ")
     patron.addinfo(fname, lname)
-    
+
+
 def patron_menu():
-    exit = 0
-    while (exit != 6):
+    menu_exit = 0
+    while menu_exit != 5:
         os.system('cls')
         print(
             f'\nPatron Menu\n'
@@ -259,7 +260,7 @@ def patron_menu():
             f'{"-" * 90}\n'
         )
         menu = int(input('Please Select to Procede: '))
-    
+
         match menu:
             case 1:
                 patron_update_info()
@@ -268,11 +269,10 @@ def patron_menu():
             case 3:
                 patron_view_shopping_list()
             case 4:
-                patron_remove_list_item()
-            case 5:
                 patron_receive_items()
-            case 6:
-                exit = 6
+            case 5:
+                menu_exit = 5
+
 
 def shopper_shop():
     shopper_id = int(shopper.get_id(input("Enter your last name: "))[0])
