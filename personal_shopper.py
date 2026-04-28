@@ -247,7 +247,7 @@ def patron_update_info():
 
 def patron_menu():
     menu_exit = 0
-    while menu_exit != 5:
+    while menu_exit != 6:
         os.system('cls')
         print(
             f'\nPatron Menu\n'
@@ -255,7 +255,7 @@ def patron_menu():
             f'1: Update Info\n'
             f'2: Add to Shopping List\n'
             f'3: View Shopping List\n'
-            f'4: Remove Item from Shopping List.\n'
+            f'4: Remove Item from Shopping List\n'
             f'5: Receive Items\n'
             f'6: Exit\n'
             f'{"-" * 90}\n'
@@ -270,9 +270,11 @@ def patron_menu():
             case 3:
                 patron_view_shopping_list()
             case 4:
-                patron_receive_items()
+                patron_remove_list_item()
             case 5:
-                menu_exit = 5
+                patron_receive_items()
+            case 6:
+                menu_exit = 6
 
 
 def shopper_shop():
